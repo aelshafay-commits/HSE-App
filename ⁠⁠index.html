@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SBG - Pedestrian Tunnels HSE</title>
+    <!-- iOS Web App Configurations -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SBG HSE">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: radial-gradient(circle at top, #061c38 0%, #020b18 100%);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Shield Grid Item Style */
+        .shield-card {
+            background: linear-gradient(180deg, rgba(6, 40, 75, 0.75) 0%, rgba(3, 19, 38, 0.95) 100%);
+            border: 1.5px solid #00d2ff;
+            clip-path: polygon(0 0, 100% 0, 100% 75%, 50% 100%, 0 75%);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .shield-card:active {
+            transform: scale(0.96);
+            border-color: #38ef7d;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
+        }
+        .glow-emergency {
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+            animation: pulse-red 2s infinite;
+        }
+        @keyframes pulse-red {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+    </style>
+</head>
+<body class="text-white min-h-screen pb-12 flex flex-col items-center">
+
+    <!-- Header / Branding -->
+    <header class="w-full text-center pt-8 pb-4 px-4 border-b border-cyan-900/40 backdrop-blur-md">
+        <div class="text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-1">Saudi Binladin Group</div>
+        <h1 class="text-xl font-black text-white tracking-wider">مجموعة بن لادن السعودية</h1>
+        <p class="text-xs text-slate-300 font-light mt-1">مشروع أنفاق المشاه | Pedestrian Tunnels Project</p>
+        <div class="inline-block mt-2 px-3 py-0.5 rounded-full bg-cyan-950 border border-cyan-500 text-[10px] text-cyan-300">
+            HSE Management Application
+        </div>
+    </header>
+
+    <!-- Emergency Button Strip -->
+    <div class="w-full px-5 mt-4">
+        <a href="tel:0567068311" class="glow-emergency w-full bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-500 hover:to-rose-600 text-white font-bold py-3 px-4 rounded-xl flex items-center justify-between shadow-lg">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <i class="fa-solid fa-phone-volume text-xl animate-bounce"></i>
+                <div class="text-right mr-3">
+                    <span class="block text-xs uppercase text-red-200">طوارئ المشروع | Emergency Call</span>
+                    <span class="text-lg font-mono tracking-wider font-extrabold">0567068311</span>
+                </div>
+            </div>
+            <span class="bg-red-900/60 text-xs px-2.5 py-1 rounded-md border border-red-400">اتصال فوري</span>
+        </a>
+    </div>
+
+    <!-- Live Metrics Counter -->
+    <div class="grid grid-cols-2 gap-3 w-full px-5 mt-4">
+        <div class="bg-slate-900/80 border border-slate-700 p-3 rounded-lg text-center">
+            <span class="block text-[10px] text-slate-400 uppercase">ساعات العمل الآمنة</span>
+            <span class="text-base font-mono font-bold text-cyan-400" id="manHours">2,450,890</span>
+            <span class="block text-[9px] text-slate-500">Safe Man-Hours</span>
+        </div>
+        <div class="bg-slate-900/80 border border-slate-700 p-3 rounded-lg text-center">
+            <span class="block text-[10px] text-slate-400 uppercase">أيام بدون حوادث</span>
+            <span class="text-base font-mono font-bold text-emerald-400" id="daysLti">485 يوم</span>
+            <span class="block text-[9px] text-slate-500">Days Since Last LTI</span>
+        </div>
+    </div>
+
+    <!-- Main Shield Grid System -->
+    <main class="grid grid-cols-3 gap-3 w-full px-4 mt-6">
+
+        <!-- Emergency Instructions -->
+        <div onclick="openModal('emergency')" class="shield-card h-32 flex flex-col items-center justify-center p-2 text-center cursor-pointer">
+            <i class="fa-solid fa-triangle-exclamation text-cyan-300 text-lg mb-1"></i>
+            <span class="text-[10px] font-bold tracking-tight uppercase leading-tight">Emergency Instructions</span>
+        </div>
+
+        <!-- Assembly Point Layout -->
+        <div onclick="openModal('assembly')" class="shield-card h-32 flex flex-col items-center justify-center p-2 text-center cursor-pointer">
+            <i class="fa-solid fa-map-location-dot text-cyan-300 text-lg mb-1"></i>
+            <span class="text-[10px] font-bold tracking-tight uppercase leading-tight">Assembly Point Layout</span>
+        </div>
+
+        <!-- Evacuation Team -->
+        <div onclick="openModal('evacuation')" class="shield-card h-32 flex flex-col items-center justify-center p-2 text-center cursor-pointer">
+            <i class="fa-solid fa-users-rays text-cyan-300 text-lg mb-1"></i>
+            <span class="text-[10px] font-bold tracking-tight uppercase leading-tight">Evacuation Team</span>
+        </div>
+
+        <!-- Policies -->
+        <div onclick="openModal('policies')" class="shield-card h-32 flex flex-col items-center justify-center p-2 text-center cursor-pointer">
+            <i class="fa-solid fa-file-shield text-cyan-300 text-lg mb-1"></i>
+            <span class="text-[10px] font-bold tracking-tight uppercase leading-tight">Policies</span>
+        </div>
+
+        <!-- Plans -->
+        <div onclick="openModal('plans')" class="shield-card h-32 flex flex-col items-center justify-center p-2 text-center cursor-pointer">
+            <i class="fa-solid fa-compass-drafting text-cyan-300 text-lg mb-1"></i>
+            <span class="text-[10px] font-bold tracking-tight uppercase leading-tight">Plans</span>
+        </div>
+
+        <!-- Procedures -->
+        <div onclick="openModal('procedures')" class="shield-card h-32 flex flex-col items-center justify-center p-2 text-center cursor-pointer">
+            <i class="fa-solid fa-list-check text-cyan-300 text-lg mb-1"></i>
+            <span class="text-[10px] font-bold tracking-tight uppercase leading-tight">Procedures</span>
+        </div>
+
+        <!-- Organization Chart -->
+        <div onclick="openModal('orgchart')" class="shield-card h-32 flex flex-col items-center justify-center p-2 text-center cursor-pointer">
+            <i class="fa-solid fa-sitemap text-cyan-300 text-lg mb-1"></i>
+            <span class="text-[10px] font-bold tracking-tight uppercase leading-tight">Organization Chart</span>
+        </div>
+
+        <!-- Safe Man Hours & Last LTI -->
+        <div onclick="openModal('lti')" class="shield-card h-32 flex flex-col items-center justify-center p-2 text-center cursor-pointer">
+            <i class="fa-solid fa-chart-line text-cyan-300 text-lg mb-1"></i>
+            <span class="text-[10px] font-bold tracking-tight uppercase leading-tight">Safe Hours & Last LTI</span>
+        </div>
+
+        <!-- Lesson Learned -->
+        <div onclick="openModal('lessons')" class="shield-card h-32 flex flex-col items-center justify-center p-2 text-center cursor-pointer">
+            <i class="fa-solid fa-lightbulb text-cyan-300 text-lg mb-1"></i>
+            <span class="text-[10px] font-bold tracking-tight uppercase leading-tight">Lesson Learned</span>
+        </div>
+
+        <!-- SDS & COSHH -->
+        <div onclick="openModal('sds')" class="shield-card h-32 flex flex-col items-center justify-center p-2 text-center cursor-pointer">
+            <i class="fa-solid fa-flask-vial text-cyan-300 text-lg mb-1"></i>
+            <span class="text-[10px] font-bold tracking-tight uppercase leading-tight">SDS & COSHH</span>
+        </div>
+
+        <!-- HSE Gallery & Safety Signs -->
+        <div onclick="openModal('gallery')" class="shield-card h-32 flex flex-col items-center justify-center p-2 text-center cursor-pointer">
+            <i class="fa-solid fa-images text-cyan-300 text-lg mb-1"></i>
+            <span class="text-[10px] font-bold tracking-tight uppercase leading-tight">Gallery & Safety Signs</span>
+        </div>
+
+        <!-- HSE Forms -->
+        <div onclick="openModal('forms')" class="shield-card h-32 flex flex-col items-center justify-center p-2 text-center cursor-pointer">
+            <i class="fa-solid fa-file-circle-check text-cyan-300 text-lg mb-1"></i>
+            <span class="text-[10px] font-bold tracking-tight uppercase leading-tight">HSE Forms</span>
+        </div>
+
+        <!-- Training Link -->
+        <div onclick="openModal('training')" class="shield-card h-32 flex flex-col items-center justify-center p-2 text-center cursor-pointer">
+            <i class="fa-solid fa-graduation-cap text-cyan-300 text-lg mb-1"></i>
+            <span class="text-[10px] font-bold tracking-tight uppercase leading-tight">Training Link</span>
+        </div>
+
+        <!-- Observation Link -->
+        <div onclick="openModal('observation')" class="shield-card h-32 flex flex-col items-center justify-center p-2 text-center cursor-pointer">
+            <i class="fa-solid fa-eye text-cyan-300 text-lg mb-1"></i>
+            <span class="text-[10px] font-bold tracking-tight uppercase leading-tight">Observation Link</span>
+        </div>
+
+        <!-- Complaints & Suggestions -->
+        <div onclick="openModal('complaints')" class="shield-card h-32 flex flex-col items-center justify-center p-2 text-center cursor-pointer">
+            <i class="fa-solid fa-comments text-cyan-300 text-lg mb-1"></i>
+            <span class="text-[10px] font-bold tracking-tight uppercase leading-tight">Suggestions & Feedback</span>
+        </div>
+
+    </main>
+
+    <!-- Content Display Modal -->
+    <div id="infoModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center">
+        <div class="bg-slate-900 border border-cyan-500/50 w-full max-w-lg rounded-t-2xl sm:rounded-2xl max-h-[85vh] flex flex-col overflow-hidden text-right p-5">
+            <div class="flex justify-between items-center pb-3 border-b border-slate-700">
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+                <h3 id="modalTitle" class="text-base font-bold text-cyan-300"></h3>
+            </div>
+            <div id="modalBody" class="py-4 text-sm text-slate-200 overflow-y-auto space-y-3">
+                <!-- Dynamic Content Loads Here -->
+            </div>
+            <button onclick="closeModal()" class="w-full bg-cyan-700 hover:bg-cyan-600 text-white font-medium py-2 rounded-lg text-sm mt-2">إغلاق</button>
+        </div>
+    </div>
+
+    <!-- Interactive Logic -->
+    <script>
+        // Database object: Easily updated by you directly in the code or linked to Google Sheets
+        const hseData = {
+            emergency: {
+                title: "Emergency Instructions | تعليمات الطوارئ",
+                html: `
+                    <div class="space-y-2">
+                        <div class="p-2 bg-red-950/40 border-r-2 border-red-500 rounded">
+                            <h4 class="font-bold text-red-300">1. عند نشوب حريق داخل النفق:</h4>
+                            <p class="text-xs text-slate-300">إيقاف جميع الأعمال فورا، تفعيل جرس الإنذار، والتوجه لمخارج الطوارئ باتجاه عكس اتجاه الدخان.</p>
+                        </div>
+                        <div class="p-2 bg-amber-950/40 border-r-2 border-amber-500 rounded">
+                            <h4 class="font-bold text-amber-300">2. عند حدوث انهيار أو تشقق:</h4>
+                            <p class="text-xs text-slate-300">الإخلاء العاجل لمنطقة الحفر، إخطار مهندس السلامة وغرفة التحكم عبر الرقم 0567068311.</p>
+                        </div>
+                    </div>`
+            },
+            assembly: {
+                title: "Assembly Points | نقاط التجمع",
+                html: `
+                    <p class="text-xs text-slate-300 mb-2">مواقع نقاط التجمع المعتمدة لمشروع أنفاق المشاة:</p>
+                    <ul class="text-xs space-y-2">
+                        <li class="bg-slate-800 p-2 rounded flex justify-between"><span>نقطة تجمع 1: مدخل البوابة الشمالية (Gate A)</span><span class="text-emerald-400 font-bold">نشطة</span></li>
+                        <li class="bg-slate-800 p-2 rounded flex justify-between"><span>نقطة تجمع 2: الساحة المركزية للمشروع (Plaza)</span><span class="text-emerald-400 font-bold">نشطة</span></li>
+                    </ul>`
+            },
+            evacuation: {
+                title: "Evacuation Team | فريق الإخلاء والطوارئ",
+                html: `
+                    <div class="space-y-2 text-xs">
+                        <div class="bg-slate-800 p-2 rounded flex justify-between items-center">
+                            <div><p class="font-bold">قائد فريق الطوارئ (Emergency Leader)</p><span class="text-slate-400">موقع: القطاع الشمالي</span></div>
+                            <a href="tel:0567068311" class="bg-cyan-600 px-3 py-1 rounded text-white"><i class="fa fa-phone"></i></a>
+                        </div>
+                        <div class="bg-slate-800 p-2 rounded flex justify-between items-center">
+                            <div><p class="font-bold">مسؤول الإسعافات الأولية (First Aider)</p><span class="text-slate-400">موقع: العيادة الميدانية</span></div>
+                            <a href="tel:0567068311" class="bg-cyan-600 px-3 py-1 rounded text-white"><i class="fa fa-phone"></i></a>
+                        </div>
+                    </div>`
+            },
+            policies: {
+                title: "HSE Policies | سياسات السلامة والصحة المهنية",
+                html: `
+                    <ul class="list-disc list-inside space-y-2 text-xs text-slate-300">
+                        <li><strong>سياسة الهدف صفر (Zero Harm):</strong> الالتزام بعدم وقوع أي حادث يعطل الأفراد أو يؤثر على بيئة العمل.</li>
+                        <li><strong>سلطة إيقاف العمل (Stop Work Authority):</strong> يحق لكل عامل إيقاف أي عمل غير آمن دون أي عواقب إدارية.</li>
+                        <li><strong>سياسة المواد الخطرة والتدخين:</strong> منع التدخين منعاً باتاً داخل الأنفاق والأماكن المغلقة.</li>
+                    </ul>`
+            },
+            plans: {
+                title: "HSE Plans | خطط السلامة للمشروع",
+                html: `<p class="text-xs text-slate-300 leading-relaxed">تتضمن خطة إدارة الطوارئ المعتمدة للأنفاق (Tunnel Emergency Response Plan)، خطة التهوية الصناعية، وخطة إدارة تدفق المواد ونفايات البناء وفق كود البناء واشتراطات الدفاع المدني السعودي.</p>`
+            },
+            procedures: {
+                title: "Operating Procedures | إجراءات العمل القياسية",
+                html: `
+                    <div class="grid grid-cols-1 gap-2 text-xs">
+                        <span class="p-2 bg-slate-800 rounded">SOP-01: تصاريح دخول الأماكن المغلقة (Confined Space Entry)</span>
+                        <span class="p-2 bg-slate-800 rounded">SOP-02: أعمال الرفع والحفر الثقيل (Heavy Lifting & Excavation)</span>
+                        <span class="p-2 bg-slate-800 rounded">SOP-03: العزل الكهربائي والميكانيكي (LOTO)</span>
+                    </div>`
+            },
+            orgchart: {
+                title: "Organization Chart | الهيكل التنظيمي للسلامة",
+                html: `<p class="text-xs text-slate-300">مدير سلامة المشروع ← مهندسو السلامة الميدانية ← مشرفو المواقع ومراقبو الأماكن المغلقة ومسعفو الطوارئ.</p>`
+            },
+            lti: {
+                title: "Safety Performance | مؤشرات الأداء",
+                html: `<p class="text-xs text-slate-300">ساعات العمل الآمنة المسجلة تبلغ <strong>2,450,890</strong> ساعة عمل حتى الآن دون تسجيل أي إصابة هادرة للوقت (Zero LTI).</p>`
+            },
+            lessons: {
+                title: "Lessons Learned | الدروس المستفادة",
+                html: `<p class="text-xs text-slate-300">تقرير درس مستفاد: ضرورة فحص غازات أول أكسيد الكربون ونقص الأكسجين بصورة متصلة ودورية بواسطة أجهزة الكشف المعايرة قبل إنزال أي فرق عمل لأعماق النفق.</p>`
+            },
+            sds: {
+                title: "SDS & COSHH | صحائف بيانات سلامة المواد",
+                html: `<p class="text-xs text-slate-300">سجل المواد الكيميائية: خرسانة مقذوفة (Shotcrete)، مواد حقن التربة الكيميائية، والمذيبات. يجب توفير أقنعة الغاز المزدوجة ونظارات الحماية الكيميائية عند الاستخدام.</p>`
+            },
+            gallery: {
+                title: "Gallery & Signs | المعرض واللوحات الإرشادية",
+                html: `<p class="text-xs text-slate-300">مكتبة اللوحات التحذيرية لمشروع الأنفاق (خطر انخفاض الأكسجين، الارتداء الإلزامي لمهمات الوقاية، مسارات الخروج في الظلام).</p>`
+            },
+            forms: {
+                title: "HSE Forms | نماذج السلامة الرقمية",
+                html: `<p class="text-xs text-slate-300">نماذج فحص المولدات الكهربائية، فحص الإنارة المؤقتة، وتصريح إشعال النيران واللحام.</p>`
+            },
+            training: {
+                title: "Training Portal | التدريب والتحريض",
+                html: `<p class="text-xs text-slate-300">بوابة تسجيل حضور محاضرات السلامة اليومية (Toolbox Talk) واختبارات السلامة التعريفي للمشروع للملتحقين الجدد.</p>`
+            },
+            observation: {
+                title: "Observation Card | رصد الملاحظات والمخاطر",
+                html: `
+                    <form class="space-y-3" onsubmit="event.preventDefault(); alert('تم استلام الملاحظة بنجاح وتوجيهها للمسؤول الميداني.'); closeModal();">
+                        <div><label class="text-xs block mb-1">نوع الرصد:</label>
+                        <select class="w-full bg-slate-800 border border-slate-600 rounded p-1.5 text-xs text-white">
+                            <option>تصرف غير آمن (Unsafe Act)</option>
+                            <option>ظرف عمل غير آمن (Unsafe Condition)</option>
+                            <option>حادث وشيك (Near Miss)</option>
+                        </select></div>
+                        <div><label class="text-xs block mb-1">موقع الملاحظة بالنفق:</label>
+                        <input type="text" placeholder="مثال: قطاع C - محطة 12" class="w-full bg-slate-800 border border-slate-600 rounded p-1.5 text-xs text-white" required></div>
+                        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 py-2 rounded text-xs font-bold text-white">إرسال التقرير الميداني</button>
+                    </form>`
+            },
+            complaints: {
+                title: "Suggestions & Feedback | الشكاوى والمقترحات",
+                html: `
+                    <textarea placeholder="اكتب مقترحك أو الشكوى بسرية تامة..." class="w-full bg-slate-800 border border-slate-600 rounded p-2 text-xs text-white h-24 mb-2"></textarea>
+                    <button onclick="alert('شكراً لك، تم إرسال رسالتك لمدير السلامة.'); closeModal();" class="w-full bg-cyan-600 hover:bg-cyan-500 py-2 rounded text-xs font-bold text-white">إرسال</button>`
+            }
+        };
+
+        function openModal(key) {
+            const item = hseData[key];
+            if (item) {
+                document.getElementById('modalTitle').innerText = item.title;
+                document.getElementById('modalBody').innerHTML = item.html;
+                document.getElementById('infoModal').classList.remove('hidden');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('infoModal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
